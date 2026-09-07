@@ -1,110 +1,101 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPB10円ガチャ</title>
-    <style>
-        body {
-            font-family: 'Helvetica', sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
-            padding: 50px;
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #333;
-        }
-        button {
-            font-size: 1.5em;
-            padding: 15px 30px;
-            margin: 20px;
-            background-color: #ff69b4;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #ff1493;
-        }
-        #result {
-            margin-top: 30px;
-            font-size: 1.8em;
-            min-height: 100px;
-        }
-        .item {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            background-color: #fffacd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>炊きパン’s BPBビルドまとめ - バックパックバトルズWiki</title>
+  <meta name="description" content="Steamのゲーム『バックパックバトルズ（Backpack Battles）』のクラス別ビルド・おすすめ構成・Tipsまとめ個人Wikiサイトです。">
+  <link rel="stylesheet" href="css/style.css?v=1.0.6">
 </head>
 <body>
-    <h1>BPB10円ガチャ</h1>
-    <p>合計10円になるようにランダムにアイテムが出ます</p>
-    <button id="gachaButton">ガチャを回す！</button>
-    <div id="result"></div>
 
-    <script>
-        // アイテムリスト（価格群ごとに日本語名）
-        const menu = {
-            1: ["石", "フレイム"],
-            2: ["ニンニク", "石炭", "砂", "輝く殻", "チビバード", "ブルーベリー", "燃える石炭", "守護のハンドバッグ", "チェスボード", "クローバー", "結び糸"],
-            3: ["木剣", "バナナ", "貯金箱", "石入り袋", "ウェストポーチ", "ニンジン", "ベニテングダケ", "カードデッキ"],
-            4: ["ハーブ", "フライパン", "木の盾", "牙", "砥石", "革のカバン", "ダガー", "グローブ", "ヘルスポーション", "会員カード", "ショートボウ", "ネズミ", "ゼロから学ぶ魔法", "均衡のワンド", "呪文の巻物:霜撃", "ブロッコリー", "ロープ", "ドラゴンクロー", "ホウキ", "雪玉", "アナグマのルーン", "ゴーストダガー", "ゾウのルーン", "タカのルーン", "トラのルーン"],
-            5: ["富の宝箱", "スタミナバッグ", "財宝の箱", "ポーションベルト", "愛情のパズルバッグ", "改善のパズルバッグ", "殻のトーテム", "呪文の巻物:再生", "たいまつ", "トウガラシ", "リス", "サンドバッグ卿", "呪文の巻物:清らかなる祝福", "破滅のパズルバッグ", "メイジの帽子", "燃えるたいまつ", "アナグマの精霊", "活力のパズルバッグ", "呪文の巻物:氷の障壁", "ネコの精霊", "フクロウの精霊", "持続のパズルバッグ", "呪文の巻物:闇のの狂乱", "英雄の剣"],
-            6: ["暗黒のアミュレット", "オノ", "活力のアミュレット", "鋼鉄のアミュレット", "幸福のアミュレット", "シェリー", "スピア", "スラバート", "生命のアミュレット", "大食のアミュレット", "秘術のアミュレット", "氷魔法の手引き", "野生のアミュレット", "カエル", "革のブーツ", "硬肌のポーション", "自然の年代記:木々", "ドラゴン革のブーツ", "ヒートダガー", "不安定な再構築器", "フルート", "マナオーブ", "マナポーション", "トゲつきチョーカー", "ヒーローポーション", "神聖なる経典", "幸運泥棒のアリスイ", "パイナップル"],
-            7: ["革の鎧", "飢えたる剣", "疫毒のフラスコ", "オイルランプ", "幸運のブタちゃん", "堕落クリスタル", "ハリネズミ", "不屈のヘルム", "ミスフォーチュン", "弓矢", "竜麟の鎧", "旅行カバン", "カップケーキ", "聡明な子狼", "力持ちの子狼", "ハイマナポーション", "ミセス・ラグルズ", "勇敢な子狼", "悪鬼のフラスコ", "聖なるポーション", "武装した聡明な子狼", "武装した力持ちの子狼", "武装した勇敢な子狼", "ラッパ"],
-            8: ["ドングリの首飾り", "青セージの首飾り", "赤ランの首飾り", "白ユリの首飾り", "シャベル", "突きキバの短弓", "トゲの盾", "ネズミ・シェフ", "ハンマー", "羊飼いの杖", "ブーメラン", "アタッククロー", "凍てつく盾", "イバラのムチ", "ターボシェリー", "ドラゴンオーブ", "ハイヘルスポーション", "ヒートスピア", "フォルトゥナの願い弓", "プラチナ会員カード", "吸血のポーション", "チーズ", "チェーンウィップ", "血のアミュレット", "極硬肌のポーション", "雪の棒"],
-            9: ["炎の剣", "リスアーチャー", "スノーマスター", "毒ガエル", "ハイヒーローポーション", "ノコ刃の剣"],
-            10: ["英雄の盾", "富のブタちゃん", "ブロッコリースラバート", "魔法の杖", "アイスフラワー", "アメシストエッグ", "エッグスカリバー", "エメラルドエッグ", "強疫毒のフラスコ", "剛力のグローブ", "コールドミラー", "サファイアエッグ", "デスロータス", "貪食のスフィア", "フレイムウィップ", "招き猫", "無の剣", "ランタンベリー", "ルビーエッグ", "ハメツダケ", "ライトセイバー", "ルビーの幼竜"]
-        };  // ← ここに } を追加！これが原因でした
+  <!-- ランダムTips通知バー -->
+  <div class="tips-bar" id="random-tips-bar">
+    <span class="tips-badge">💡 Tips</span>
+    <span class="tips-text" id="random-tips-text">読み込み中...</span>
+    <button class="tips-refresh" id="tips-refresh-btn" title="他のTipsを表示">↻</button>
+  </div>
 
-        function runGacha(target = 10) {
-            let selected = [];
-            let total = 0;
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-logo" id="logo-btn">
+        <div class="logo-icon">🍞</div>
+        <span>炊きパン’s BPBビルドまとめ</span>
+      </a>
 
-            while (total < target) {
-                let candidates = [];
-                for (let price in menu) {
-                    if (total + parseInt(price) <= target) {
-                        menu[price].forEach(item => {
-                            candidates.push({price: parseInt(price), item: item});
-                        });
-                    }
-                }
+      <!-- 🌟 来訪者カウンターバッジ (CounterAPI連動) -->
+      <div class="global-counter-badge" id="global-counter" title="総来訪者数">
+        <span class="counter-label">👀 Total Visits:</span>
+        <div class="global-counter-value" id="global-counter-value">
+          <span class="counter-digit offline-dash">ー</span>
+        </div>
+      </div>
 
-                if (candidates.length === 0) {
-                    return null; // エラー（本来起きない）
-                }
+      <div class="sub-links">
+        <span class="sub-link-item disabled">作った他のサイト(準備中)</span>
+        <span class="sub-link-item disabled">問い合わせ(準備中)</span>
+      </div>
+    </div>
+  </header>
 
-                let choice = candidates[Math.floor(Math.random() * candidates.length)];
-                selected.push(choice);
-                total += choice.price;
-            }
+  <!-- クラス・カテゴリナビゲーション (スマホ改行防止・横スクロール) -->
+  <div class="nav-scroll-wrapper">
+    <nav class="main-nav" id="main-nav-tabs">
+      <!-- JavaScriptで動的生成 -->
+    </nav>
+  </div>
 
-            return {selected, total};
-        }
+  <!-- メインコンテンツ表示エリア -->
+  <main class="main-container">
+    
+    <!-- ページタイトルセクション -->
+    <div class="page-title-section" id="page-title-section">
+      <!-- JavaScriptで表示更新 -->
+    </div>
 
-        document.getElementById('gachaButton').addEventListener('click', () => {
-            let result = runGacha(10);
-            if (!result) {
-                document.getElementById('result').innerHTML = "エラー: 組み合わせが見つかりません";
-                return;
-            }
+    <!-- ビルド分類クイックナビゲーション表 -->
+    <div class="rank-summary-card" id="rank-summary-card" style="display: none;">
+      <div class="rank-summary-header">
+        <span>📊 ビルド一覧（クリックで移動）</span>
+      </div>
+      <div class="rank-grid">
+        <div class="rank-column">
+          <div class="rank-column-header">
+            <span>強い</span>
+            <span class="rank-tag tag-s">S</span>
+          </div>
+          <ul class="rank-item-list" id="rank-list-s"></ul>
+        </div>
+        <div class="rank-column">
+          <div class="rank-column-header">
+            <span>そこそこ</span>
+            <span class="rank-tag tag-a">A</span>
+          </div>
+          <ul class="rank-item-list" id="rank-list-a"></ul>
+        </div>
+        <div class="rank-column">
+          <div class="rank-column-header">
+            <span>微妙</span>
+            <span class="rank-tag tag-b">B</span>
+          </div>
+          <ul class="rank-item-list" id="rank-list-b"></ul>
+        </div>
+      </div>
+    </div>
 
-            let html = "<strong>結果:</strong><br>";
-            result.selected.forEach(obj => {
-                html += `<span class="item">${obj.item}(${obj.price}円)</span> `;
-            });
-            html += `<br><br>→ 合計 ${result.total}円（${result.selected.length}品）`;
+    <!-- ビルドカード一覧コンテナ -->
+    <div class="build-list-container" id="build-list-container">
+      <!-- JavaScriptで動的描画 -->
+    </div>
 
-            document.getElementById('result').innerHTML = html;
-        });
-    </script>
+  </main>
+
+  <!-- 右下：最上部に戻るボタン -->
+  <button class="back-to-top" id="back-to-top-btn" title="ページの最上部へ戻る">▲</button>
+
+  <!-- データファイル・アプリ処理の読み込み (キャッシュクリア用クエリ付与) -->
+  <script src="js/data.js?v=1.0.7"></script>
+  <script src="js/app.js?v=1.0.7"></script>
 </body>
 </html>
